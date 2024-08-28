@@ -1,14 +1,20 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js";
+
+dotenv.config({});
 
 const app = express();
+
+const PORT = process.env.PORT || 3000;
 
 //****************ROUTES Start**********************************
 
 app.get("/", (req, res) => {
   return res.status(200).json({
-    message: "i am comming from Randi KHAANA",
+    message: "i am comming from Parallel Universe",
     success: true,
   });
 });
@@ -29,7 +35,7 @@ app.use(cors(corsOptions));
 
 //****************MIDDLEWARES END**********************************
 
-const PORT = 3000;
 app.listen(PORT, () => {
+  connectDB();
   console.log(`server is running at the port of ${PORT}`);
 });
