@@ -145,10 +145,30 @@ export const editProfile = async (req, res) => {
 
     await user.save();
     return res.status(404).json({
-        message: "Profile Updated Successfully",
-        success: true,
-        user
+      message: "Profile Updated Successfully",
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSuggesteduser = async (req, res) => {
+  try {
+    const Suggesteduser = await User.find({ _id: { $ne: req.id } }).select(
+      "-password"
+    );
+    if (!Suggesteduser) {
+      return res.status(400).json({
+        message: "Currently do not have any user",
       });
+    }
+    return res.status(200).json({
+        success:true,
+        users:Suggesteduser
+    })
+
   } catch (error) {
     console.log(error);
   }
