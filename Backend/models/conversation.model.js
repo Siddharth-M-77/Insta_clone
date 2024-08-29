@@ -15,4 +15,4 @@ const conversationSchmea = new mongoose.Schema({
   ],
 });
 
-export default conversationSchmea = mongoose.model("Conversation",conversationSchmea)
+export default Conversation = mongoose.model("Conversation",conversationSchmea)

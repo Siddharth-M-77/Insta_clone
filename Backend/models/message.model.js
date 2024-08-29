@@ -15,4 +15,4 @@ const messageSchema = new mongoose.Schema({
     }
 }) 
 
-export default commentSchema = mongoose.model("Comments",commentSchema)
+export default Message = mongoose.model("Comments",commentSchema)
