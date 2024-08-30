@@ -173,3 +173,14 @@ export const getSuggesteduser = async (req, res) => {
     console.log(error);
   }
 };
+
+export const followOrUnfollow =(req,res)=>{
+
+  try {
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+
+}
