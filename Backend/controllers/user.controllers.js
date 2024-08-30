@@ -165,22 +165,55 @@ export const getSuggesteduser = async (req, res) => {
       });
     }
     return res.status(200).json({
-        success:true,
-        users:Suggesteduser
-    })
-
+      success: true,
+      users: Suggesteduser,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const followOrUnfollow =(req,res)=>{
-
+export const followOrUnfollow = async (req, res) => {
   try {
-    
+    const followerPerson = req.id;
+    const followingPerson = req.params.id;
+
+    if (followerPerson === followingPerson) {
+      return res.status(400).json({
+        message: "You Can Not Follow/Unfollow Yourself",
+        success: false,
+      });
+    }
+
+    const user = await User.findById(follower);
+    const targetUser = await User.findById(following);
+
+    if (!user || !targetUser) {
+      return res.status(400).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+
+    //here we will cheak we have follow or unfollow
+
+    const isFollowing = user.following.includes(targetUser);
+    if (isFollowing) {
+      //unfollow logic
+    } else {
+      //follow logic
+      await Promise.all([
+        User.updateOne(
+          { _id: followerPerson },
+          { $push: { following: followingPerson } }
+        ),
+        User.updateOne(
+          { _id: followingPerson },
+          { $push: { following: followerPerson } }
+        ),
+      ]);
+    }
   } catch (error) {
     console.log(error);
-    
   }
-
-}
+};
