@@ -200,6 +200,20 @@ export const followOrUnfollow = async (req, res) => {
     const isFollowing = user.following.includes(targetUser);
     if (isFollowing) {
       //unfollow logic
+      await Promise.all([
+        User.updateOne(
+          { _id: followerPerson },
+          { $pull: { following: followingPerson } }
+        ),
+        User.updateOne(
+          { _id: followingPerson },
+          { $pull: { followers: followerPerson } }
+        ),
+      ]);
+      return res.status(200).json({
+        message: "Unfollowed Successfully",
+        success:true
+      });
     } else {
       //follow logic
       await Promise.all([
@@ -209,9 +223,13 @@ export const followOrUnfollow = async (req, res) => {
         ),
         User.updateOne(
           { _id: followingPerson },
-          { $push: { following: followerPerson } }
+          { $push: { followers: followerPerson } }
         ),
       ]);
+      return res.status(200).json({
+        message: "followed Successfully",
+        success:true
+      });
     }
   } catch (error) {
     console.log(error);
