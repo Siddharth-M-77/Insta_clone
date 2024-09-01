@@ -1,8 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import getDataUri from "../utils/datauri.js";
-import cloudinary from "../utils/Cloudinary.js";
+// import getDataUri from "../utils/datauri.js";
+// import cloudinary from "../utils/Cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -149,44 +149,85 @@ export const getProfile = async (req, res) => {
   }
 };
 
+// export const editProfile = async (req, res) => {
+//   try {
+//     const userId = req.id;
+//     const { bio, gender } = req.body;
+//     let updatedFields = { bio, gender };
+    
+//     const profilePicture = req.file;
+
+//     if (profilePicture) {
+
+//       const fileUri = getDataUri(profilePicture);
+//       // console.log("File URI:", fileUri);
+
+//       const cloudResponse = await cloudinary.uploader.upload(fileUri);
+//       console.log("Cloudinary Response:", cloudResponse);
+
+//       updatedFields.profilePicture = cloudResponse.secure_url;
+//     }
+
+//     const user = await User.findByIdAndUpdate(userId, updatedFields, {
+//       new: true,
+//     });
+
+//     if (!user) {
+//       return res.status(404).json({
+//         message: "User not found.",
+//         success: false,
+//       });
+//     }
+
+//     return res.status(200).json({
+//       message: "Profile updated successfully.",
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.error("Error updating profile:", error);
+//     return res.status(500).json({
+//       message: "Server error",
+//       success: false,
+//     });
+//   }
+// };
+
+
 export const editProfile = async (req, res) => {
   try {
-    const userId = req.id;
     const { bio, gender } = req.body;
-    const profilePicture = req.file;
-
-    let updatedFields = { bio, gender };
-
-    if (profilePicture) {
-      const fileUri = getDataUri(profilePicture);
-      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-      updatedFields.profilePicture = cloudResponse.secure_url;
-    }
-
-    const user = await User.findByIdAndUpdate(userId, updatedFields, {
-      new: true,
-    });
+    const user = await User.findById(req.id).select("-password");; // Assuming you're using an authentication middleware to populate req.user
 
     if (!user) {
-      return res.status(404).json({
-        message: "User not found.",
-        success: false,
-      });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    return res.status(200).json({
-      message: "Profile updated successfully.",
+    if (bio) user.bio = bio;
+    if (gender) user.gender = gender;
+
+    if (req.file) {
+      user.profilePicture = req.file.path; // Save the path of the uploaded file
+    }
+
+    await user.save();
+
+    res.status(200).json({
       success: true,
-      user,
-    });
+      message: 'Profile updated successfully',
+      user
+    })
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Server error",
+    res.status(500).json({
       success: false,
+      message: 'An error occurred while updating the profile',
+      error: error.message
     });
   }
 };
+
+
+
 
 export const getSuggestedUsers = async (req, res) => {
   try {
@@ -226,25 +267,32 @@ export const followOrUnfollow = async (req, res) => {
       });
     }
 
-    const follower = await User.findById(followerId);
-    const following = await User.findById(followingId);
+    const follower = await User.findById(followerId)
+    const following = await User.findById(followingId)
 
-    if (!follower || !following) {
+    if (!follower) {
       return res.status(404).json({
-        message: "User not found.",
+        message: "Follower user not found.",
         success: false,
       });
     }
 
-    const isFollowing = follower.followings.includes(followingId);
+    if (!following) {
+      return res.status(404).json({
+        message: "Following user not found.",
+        success: false,
+      });
+    }
+
+    const isFollowing = follower.following.includes(followingId);
 
     if (isFollowing) {
       // Unfollow logic
-      follower.followings.pull(followingId);
+      follower.following.pull(followingId);
       following.followers.pull(followerId);
     } else {
       // Follow logic
-      follower.followings.push(followingId);
+      follower.following.push(followingId);
       following.followers.push(followerId);
     }
 
