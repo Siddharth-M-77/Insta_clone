@@ -2,6 +2,7 @@ import sharp from "sharp";
 import cloudinary from "../utils/Cloudinary.js";
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
+import Comment from "../models/comment.model.js";
 
 export const addNewPost = async (req, res) => {
   try {
@@ -135,7 +136,7 @@ export const DislikePost = async (req, res) => {
   }
 };
 
-export const addNewComment = async () => {
+export const addNewComment = async (req, res) => {
   try {
     const postId = req.params.id;
     const commenterId = req.id;
@@ -165,6 +166,99 @@ export const addNewComment = async () => {
       comment,
       success: true,
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCommentsOfPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const comments = await Comment.find({ post: postId }).populate(
+      "author",
+      "username",
+      "profilePicture"
+    );
+    if (!comments) {
+      return res
+        .status(404)
+        .json({ message: "No Comments Found for This Post", success: false });
+    }
+    return res.status(200).json({ success: true, comments });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteComment = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const authorId = req.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+        success: false,
+      });
+    }
+
+    //cheak if the logged in user is the author of the post
+
+    if (post.author.toString() !== authorId) {
+      return res.status(404).json({
+        message: "Unauthorized",
+        success: false,
+      });
+    }
+    //here we find and delete user by postId
+    await Post.findByIdAndDelete(postId);
+
+    //here we will remove the postId from the user's post
+
+    const user = await User.findById(authorId);
+    user.posts = user.posts.filter((id) => id.toString() === postId);
+    user.save();
+
+    //delete associated comments with post
+    await Comment.deleteMany({ post: postId });
+
+    return res.status(200).json({
+      message: "Post Deleted",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const bookmarkPost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const c = req.id;
+
+    const post = await User.findById(postId);
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: "Post not Found", success: false });
+    }
+    const user = await User.findById(postId);
+    if (user.bookmarks.includes(post._id)) {
+      //here we remove post from bookmarks
+      await user.updateOne({ $pull: { bookmarks: post._id } });
+      await user.save();
+      return res.status(200).json({
+        message: "Post Remove From Bookmarks",
+        success: true,
+      });
+    } else {
+      await user.updateOne({ $addToSet: { bookmarks: post._id } });
+      await user.save();
+      return res.status(200).json({
+        message: "Post Bookmarked ",
+        success: true,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
