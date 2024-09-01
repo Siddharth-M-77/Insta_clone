@@ -100,14 +100,16 @@ export const likePost = async (req, res) => {
     const postId = req.params.id;
     const post = await Post.find(postId);
     if (!post) {
-      return res.status(404).json({ message: "Post not found", success: false });
+      return res
+        .status(404)
+        .json({ message: "Post not found", success: false });
     }
     //Like logic start here
 
-     await post.updateOne({$addToSet: {likes:LikerId}})
-     await post.save()
+    await post.updateOne({ $addToSet: { likes: LikerId } });
+    await post.save();
 
-    return res.status(200).json({message:"Post Liked",success:true}) 
+    return res.status(200).json({ message: "Post Liked", success: true });
   } catch (error) {
     console.log(error);
   }
@@ -118,14 +120,51 @@ export const DislikePost = async (req, res) => {
     const postId = req.params.id;
     const post = await Post.find(postId);
     if (!post) {
-      return res.status(404).json({ message: "Post not found", success: false });
+      return res
+        .status(404)
+        .json({ message: "Post not found", success: false });
     }
     //Like logic start here
 
-     await post.updateOne({$pull: {likes:LikerId}})
-     await post.save()
+    await post.updateOne({ $pull: { likes: LikerId } });
+    await post.save();
 
-    return res.status(200).json({message:"Post Disliked",success:true}) 
+    return res.status(200).json({ message: "Post Disliked", success: true });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addNewComment = async () => {
+  try {
+    const postId = req.params.id;
+    const commenterId = req.id;
+    const { text } = req.body;
+    const post = await Post.findById(postId);
+
+    if (!text) {
+      return res
+        .status(404)
+        .json({ message: "text is required", success: false });
+    }
+
+    const comment = await Comment.create({
+      text,
+      author: commenterId,
+      post: postId,
+    }).populate({
+      path: "author",
+      select: "username profilePicture",
+    });
+
+    post.comments.push(comment._id);
+    await post.save();
+
+    return res.status(201).json({
+      message: "Comment Added",
+      comment,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
   }
