@@ -93,3 +93,40 @@ export const getUserPost = async (req, res) => {
     console.log(error);
   }
 };
+
+export const likePost = async (req, res) => {
+  try {
+    const LikerId = req.id;
+    const postId = req.params.id;
+    const post = await Post.find(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found", success: false });
+    }
+    //Like logic start here
+
+     await post.updateOne({$addToSet: {likes:LikerId}})
+     await post.save()
+
+    return res.status(200).json({message:"Post Liked",success:true}) 
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const DislikePost = async (req, res) => {
+  try {
+    const LikerId = req.id;
+    const postId = req.params.id;
+    const post = await Post.find(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found", success: false });
+    }
+    //Like logic start here
+
+     await post.updateOne({$pull: {likes:LikerId}})
+     await post.save()
+
+    return res.status(200).json({message:"Post Disliked",success:true}) 
+  } catch (error) {
+    console.log(error);
+  }
+};
