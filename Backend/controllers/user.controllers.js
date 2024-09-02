@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Post  from "../models/post.model.js";
 // import getDataUri from "../utils/datauri.js";
 // import cloudinary from "../utils/Cloudinary.js";
 
@@ -77,6 +78,15 @@ export const login = async (req, res) => {
       expiresIn: "1d",
     });
 
+    const populatedPosts = await Promise.all(
+      user.posts.map(async (postId) => {
+        const post = await Post.findById(postId);
+        if (post.author.equals(user._id)) {
+          return post;
+        }
+        return null;
+      })
+    );
     return res
       .cookie("token", token, {
         httpOnly: true,
@@ -94,7 +104,7 @@ export const login = async (req, res) => {
           profilePicture: user.profilePicture,
           followers: user.followers,
           followings: user.followings,
-          posts: user.posts,
+          posts: populatedPosts
         },
       });
   } catch (error) {
@@ -125,7 +135,6 @@ export const getProfile = async (req, res) => {
   try {
     const userId = req.params.id;
     // console.log(userId);
-    
 
     const user = await User.findById(userId).select("-password");
 
@@ -154,7 +163,7 @@ export const getProfile = async (req, res) => {
 //     const userId = req.id;
 //     const { bio, gender } = req.body;
 //     let updatedFields = { bio, gender };
-    
+
 //     const profilePicture = req.file;
 
 //     if (profilePicture) {
@@ -193,14 +202,13 @@ export const getProfile = async (req, res) => {
 //   }
 // };
 
-
 export const editProfile = async (req, res) => {
   try {
     const { bio, gender } = req.body;
-    const user = await User.findById(req.id).select("-password");; // Assuming you're using an authentication middleware to populate req.user
+    const user = await User.findById(req.id).select("-password"); // Assuming you're using an authentication middleware to populate req.user
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (bio) user.bio = bio;
@@ -214,20 +222,17 @@ export const editProfile = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Profile updated successfully',
-      user
-    })
+      message: "Profile updated successfully",
+      user,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'An error occurred while updating the profile',
-      error: error.message
+      message: "An error occurred while updating the profile",
+      error: error.message,
     });
   }
 };
-
-
-
 
 export const getSuggestedUsers = async (req, res) => {
   try {
@@ -267,8 +272,8 @@ export const followOrUnfollow = async (req, res) => {
       });
     }
 
-    const follower = await User.findById(followerId)
-    const following = await User.findById(followingId)
+    const follower = await User.findById(followerId);
+    const following = await User.findById(followingId);
 
     if (!follower) {
       return res.status(404).json({

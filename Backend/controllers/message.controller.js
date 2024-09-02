@@ -49,7 +49,7 @@ export const getMessage = async (req, res) => {
     }
     return res.status(200).json({
       success: true,
-      message: Conversatation?.messages,
+      message: Conversatation?.messages
     });
   } catch (error) {
     console.log(error);

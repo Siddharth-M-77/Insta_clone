@@ -2,7 +2,9 @@ import sharp from "sharp";
 import cloudinary from "../utils/Cloudinary.js";
 import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
-import Comment from "../models/comment.model.js";
+import Comment from "../models/comment.model.js"
+
+
 
 export const addNewPost = async (req, res) => {
   try {
@@ -190,7 +192,7 @@ export const getCommentsOfPost = async (req, res) => {
   }
 };
 
-export const deleteComment = async (req, res) => {
+export const deletePost = async (req, res) => {
   try {
     const postId = req.params.id;
     const authorId = req.id;
