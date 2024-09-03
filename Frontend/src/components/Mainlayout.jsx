@@ -1,9 +1,13 @@
 import React from 'react'
+import Home from './Home'
+import { Outlet } from 'react-router-dom'
 
 const Mainlayout = () => {
   return (
     <div>
-      mainLayout
+      sidebar
+      
+    <div><Outlet/></div>
     </div>
   )
 }

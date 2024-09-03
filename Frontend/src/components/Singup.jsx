@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
@@ -6,8 +6,11 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 const Signup = () => {
+
+    const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -17,6 +20,7 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     try {
+        setLoading(true)
       const response = await axios.post(
         "http://localhost:4000/api/v1/user/register",
         data,
@@ -96,10 +100,17 @@ const Signup = () => {
             <span className="text-red-500 text-sm">{errors.password.message}</span>
           )}
         </div>
-        <Button type="submit" className="w-full">
-          Signup
-        </Button>
-        <Link className="text-center text-sm px-4 py-2 font-semibold font-mono bg-blue-500" to="/login ">Signup-now</Link>
+        {
+            loading ?(
+                <Button>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                    Please wait...
+                </Button>
+            ):(<Button type="submit" className="w-full">
+                Signup
+              </Button>)
+        }
+        <Link className="text-center text-sm px-4 py-2 font-semibold font-mono bg-blue-500" to="/login ">Log In</Link>
 
       </form>
     </div>
