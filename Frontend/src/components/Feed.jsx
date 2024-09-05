@@ -14,7 +14,117 @@ const Feed = () => {
         { username: "user2", text: "Loved it!" },
         { username: "user2", text: "Loved it!" },
         { username: "user2", text: "Loved it!" },
+        
+        
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
         { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
+      ],
+    },
+    {
+      username: "john_doe",
+      profilePic: "https://via.placeholder.com/50",
+      postVideo: "https://www.w3schools.com/html/mov_bbb.mp4", // Example video URL
+      caption: "Check out this cool video! #video #fun",
+      comments: [
+        { username: "user1", text: "Awesome!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+        { username: "user2", text: "Loved it!" },
+    
       ],
     },
     {
@@ -27,7 +137,7 @@ const Feed = () => {
   ];
 
   return (
-    <div className="p-4 w-[60%] ml-[14rem] h-screen overflow-y-auto hide-scrollbar">
+    <div className=" w-[60%] ml-[14rem] h-screen overflow-y-auto hide-scrollbar">
       {posts.map((post, index) => (
         <Post key={index} {...post} />
       ))}

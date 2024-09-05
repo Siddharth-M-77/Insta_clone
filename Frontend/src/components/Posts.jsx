@@ -8,6 +8,14 @@ const Post = ({ username, profilePic, postVideo, caption, comments }) => {
   const [showAllComments, setShowAllComments] = useState(false); // State to toggle comments view
   const [dialogOpen, setDialogOpen] = useState(false); // State to toggle the dialog
   const [commentsDialogOpen, setCommentsDialogOpen] = useState(false); // State to toggle comments dialog
+  const [commentsList, setCommentsList] = useState(comments); // State to manage comments list in the dialog
+
+  const handlePostComment = () => {
+    if (comment.trim()) {
+      setCommentsList([...commentsList, { profilePic: 'defaultProfilePic', username: 'You', text: comment }]); // Example comment structure
+      setComment("");
+    }
+  };
 
   return (
     <div className="max-w-lg mx-auto mt-4 bg-white shadow-lg rounded-lg overflow-hidden">
@@ -43,7 +51,7 @@ const Post = ({ username, profilePic, postVideo, caption, comments }) => {
           </Button>
           <Button
             variant="ghost"
-            onClick={() => setDialogOpen(true)} // Open dialog when MessageCircle is clicked
+            onClick={() => setCommentsDialogOpen(true)} // Open dialog when MessageCircle is clicked
           >
             <MessageCircle className="w-6 h-6" />
           </Button>
@@ -111,6 +119,7 @@ const Post = ({ username, profilePic, postVideo, caption, comments }) => {
             variant="ghost"
             className="ml-3"
             style={{ color: "aqua" }}
+            onClick={handlePostComment}
           >
             Post
           </Button>
@@ -137,30 +146,63 @@ const Post = ({ username, profilePic, postVideo, caption, comments }) => {
 
       {/* Dialog for All Comments */}
       <Dialog open={commentsDialogOpen} onOpenChange={setCommentsDialogOpen}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Comments on Post by {username}</DialogTitle>
-          </DialogHeader>
-          <div className="p-4">
-            {comments.length === 0 ? (
-              <p>No comments yet.</p>
-            ) : (
-              comments.map((comment, index) => (
-                <div key={index} className="flex items-start mb-2">
-                  <img
-                    src={comment.profilePic}
-                    alt={`${comment.username}'s profile`}
-                    className="w-8 h-8 rounded-full object-cover mr-2"
-                  />
-                  <div>
-                    <p>
-                      <span className="font-semibold">{comment.username}</span>{" "}
-                      {comment.text}
-                    </p>
+        <DialogContent className="flex h-full max-w-screen-lg">
+          {/* Media Section */}
+          <div className="flex-1 h-full p-4 bg-gray-100">
+            <video
+              className="w-full h-full object-cover"
+              controls
+              preload="metadata"
+            >
+              <source src={postVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          {/* Comments Section */}
+          <div className="flex-1 h-full p-4 overflow-y-auto bg-white flex flex-col">
+            <DialogHeader>
+              <DialogTitle>Comments on Post by {username}</DialogTitle>
+            </DialogHeader>
+            <div className="flex-1 overflow-y-auto">
+              {commentsList.length === 0 ? (
+                <p>No comments yet.</p>
+              ) : (
+                commentsList.map((comment, index) => (
+                  <div key={index} className="flex mt-4 items-start mb-2">
+                    <img
+                      src={comment.profilePic}
+                      alt={`${comment.username}'s profile`}
+                      className="w-8 h-8 rounded-full object-cover mr-2"
+                    />
+                    <div>
+                      <p>
+                        <span className="font-semibold">{comment.username}</span>
+                        {comment.text}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
+            <div className="flex items-center border-t pt-2">
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                className="w-full p-2 text-sm outline-none"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              {comment.trim() && (
+                <Button
+                  variant="ghost"
+                  className="ml-3"
+                  style={{ color: "aqua" }}
+                  onClick={handlePostComment}
+                >
+                  Post
+                </Button>
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
