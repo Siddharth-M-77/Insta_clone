@@ -3,7 +3,7 @@ import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp } fr
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { toast } from 'sonner'
 import axios from 'axios'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const Sliderleft = () => {
 
@@ -48,7 +48,8 @@ const Sliderleft = () => {
 
     }
 return (
-    <div className='w-[40%] md:w-[20%]  sm:w-[17%] sm:text-sm text-3xl fixed top-0 left-0 z-40 border-r-[1px] bg-black text-white h-full flex flex-col items-center justify-center gap-20 sm:gap-10  py-5 '>
+    <div className='w-[40%] md:w-[20%]  sm:w-[17%] sm:text-sm text-3xl fixed top-0 left-0 z-40 border-r-[1px] bg-black text-white h-full flex flex-col items-center justify-center gap-20 sm:gap-8  py-4 '>
+        <h1 className='text-3xl text-white mt-4'>LOGO</h1>
         {
             slidbarItems.map((item, index) => {
                 return (

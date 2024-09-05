@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import {Link,useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
+
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -31,11 +33,11 @@ const Login = () => {
           withCredentials: true,
         }
       );
-
-      if (response.status === 201) {
+  
+      if (response.status === 200 || response.status === 201) {
         toast.success(response.data.message);
-        reset();
-        nav
+        navigate("/"); // Navigate to the home page
+        reset(); // Clear the form
       } else {
         toast.error(response.data.message);
       }
@@ -45,6 +47,7 @@ const Login = () => {
       setLoading(false); // Stop loading
     }
   };
+  
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-[#F0F8FF] p-4">
