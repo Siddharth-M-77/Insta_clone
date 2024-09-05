@@ -33,7 +33,7 @@ const browserRouter = createBrowserRouter([
 
 const App = () => {
   return (
-    <div className='w-screen  h-screen '>
+    <div className='w-screen  h-screen bg-black text-white'>
 
     <>
     <RouterProvider router={browserRouter}/>

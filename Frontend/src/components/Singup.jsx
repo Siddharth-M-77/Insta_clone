@@ -9,39 +9,41 @@ import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 const Signup = () => {
-
-    const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm();
 
   const onSubmit = async (data) => {
     try {
-        setLoading(true)
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/user/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
+        setLoading(true);  // Start loading
+        const response = await axios.post(
+            "http://localhost:4000/api/v1/user/register",
+            data,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true,
+            }
+        );
 
-      if (response.status === 201) {
-        toast.success(response.data.message);
-        reset();
-      } else {
-        toast.error(response.data.message);
-      }
+        if (response.status === 201) {
+            toast.success(response.data.message);
+            reset();
+        } else {
+            toast.error(response.data.message);
+        }
     } catch (error) {
-      toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "Something went wrong!");
+    } finally {
+        setLoading(false);  // Stop loading
     }
-  };
+};
+
 
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-[#F0F8FF] p-4">
@@ -65,7 +67,9 @@ const Signup = () => {
             {...register("username", { required: "Username is required" })}
           />
           {errors.username && (
-            <span className="text-red-500 text-sm">{errors.username.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.username.message}
+            </span>
           )}
         </div>
         <div>
@@ -97,21 +101,27 @@ const Signup = () => {
             {...register("password", { required: "Password is required" })}
           />
           {errors.password && (
-            <span className="text-red-500 text-sm">{errors.password.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.password.message}
+            </span>
           )}
         </div>
-        {
-            loading ?(
-                <Button>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                    Please wait...
-                </Button>
-            ):(<Button type="submit" className="w-full">
-                Signup
-              </Button>)
-        }
-        <Link className="text-center text-sm px-4 py-2 font-semibold font-mono bg-blue-500" to="/login ">Log In</Link>
-
+        {loading ? (
+          <Button>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Please wait...
+          </Button>
+        ) : (
+          <Button type="submit" className="w-full">
+            Signup
+          </Button>
+        )}
+        <Link
+          className="text-center text-sm px-4 py-2 font-semibold font-mono bg-blue-500"
+          to="/login"
+        >
+          Log In
+        </Link>
       </form>
     </div>
   );

@@ -1,11 +1,12 @@
 import React from 'react'
 import Home from './Home'
 import { Outlet } from 'react-router-dom'
+import Sliderleft from './Sliderleft'
 
 const Mainlayout = () => {
   return (
     <div>
-      sidebar
+      <Sliderleft/>
       
     <div><Outlet/></div>
     </div>
