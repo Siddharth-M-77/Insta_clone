@@ -5,7 +5,7 @@ import Rightsidebar from './Rightsidebar'
 
 const Home = () => {
   return (
-    <div className='flex bg-sky-500 overflow-x-hidden w-full'>
+    <div className='flex bg-sky-500 w-full'>
     <div className='flex-grow'>
       <Feed/>
       <Outlet/>

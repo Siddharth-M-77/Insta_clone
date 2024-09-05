@@ -33,7 +33,7 @@ const browserRouter = createBrowserRouter([
 
 const App = () => {
   return (
-    <div className='w-screen  min-h-screen '>
+    <div className='w-screen  min-h-screen overflow-hidden'>
 
     <>
     <RouterProvider router={browserRouter}/>

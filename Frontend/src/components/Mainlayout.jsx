@@ -5,7 +5,7 @@ import Sliderleft from './Sliderleft'
 
 const Mainlayout = () => {
   return (
-    <div>
+    <div className='w-full bg-black'>
       <Sliderleft/>
       
     <div><Outlet/></div>
